@@ -1,0 +1,150 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <ng-container *ngIf="rol">
+        <ng-container *ngIf="rol.id">Editar</ng-container>
+        <ng-container *ngIf="!rol.id">Crear</ng-container>
+        Rol
+        <ng-container *ngIf="rol.id">'{{rol.descripcion}}' </ng-container>
+        <ng-container *ngIf="rol.estatus === 1">
+          <span class="label label-dot label-lg mr-2 label-primary"></span>
+        </ng-container>
+        <ng-container *ngIf="rol.estatus === 0">
+          <span class="label label-dot label-lg mr-2 label-light-danger"></span>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 404px;">
+    <ng-container *ngIf="isLoading$ | async">
+      <div class="overlay-layer bg-transparent">
+        <div class="spinner spinner-lg spinner-success"></div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="rol">
+      <form action="#" class="form form-label-right" [formGroup]="formGroup">
+        <div class="form-group row">
+          <div class="col-lg-12">
+            <label class="form-label">Descripción*</label>
+            <input type="text" class="form-control" name="descripcion" placeholder="Complete el campo"
+              formControlName="descripcion" autocomplete="off" [class.is-invalid]="isControlInvalid('descripcion')"
+              [class.is-valid]="isControlValid('descripcion')" (ngModelChange)="ngmodelChanged($event)" />
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'descripcion')">El campo es necesario</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'descripcion')">Máximo 150 caracteres
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="disabled">
+          <div class="col-lg-12 col-md-12 col-xs-12">
+            <label>Modulo</label>
+            <select formControlName="modulo" class="form-control form-control-lg form-control-solid" name="modulo"
+              (change)="ngcallPermisos($event.target.value)">
+              <option [ngValue]="null" disabled>Elige un modulo</option>
+              <option *ngFor="let m of catalogoModulo" [ngValue]="m.id">
+                {{ m.modulo }}
+              </option>
+            </select>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'modulo')">Por favor seleccione un
+              <b>Modulo</b>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" *ngIf="disabled">
+          <label>Permisos</label>
+          <div class="checkbox-inline" id="divcheckbox" *ngFor="let p of permisos">
+            <div *ngIf="p.habilitado == 1; then thenBlock else elseBlock"></div>
+            <ng-template #thenBlock>
+              <label class="checkbox">
+                <input type="checkbox" value="{{p.idPermiso}}" id="chkbox{{p.idPermiso}}" name="checkboxPermisos"
+                  checked (change)="ngcheckPermiso($event.target)" />
+                <span></span>
+                {{p.accion}}
+              </label>
+            </ng-template>
+            <ng-template #elseBlock>
+              <label class="checkbox">
+                <input type="checkbox" value="{{p.idPermiso}}" id="chkbox{{p.idPermiso}}" name="checkboxPermisos"
+                  (change)="ngcheckPermiso($event.target)" />
+                <span></span>
+                {{p.accion}}
+              </label>
+            </ng-template>
+          </div>
+          <span class="form-text text-muted">Los permisos se seleccionan por módulo seleccionado</span>
+        </div>
+        <div class="form-group row" *ngIf="disabled">
+          <div class="col-lg-12 col-md-12 col-xs-12">
+            <label>Área</label>
+            <select formControlName="area" class="form-control form-control-lg form-control-solid" name="area"
+              (change)="ngcallDirectorio($event.target.value)">
+              <option [ngValue]="null" disabled>Elige una área</option>
+              <option *ngFor="let m of area" [ngValue]="m.id">
+                {{ m.nombre }}
+              </option>
+            </select>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'area')">Por favor seleccione una
+              <b>Área</b>
+            </div>
+          </div>
+        </div>
+        <div>
+         
+          <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
+            <!-- This is the tree node template for leaf nodes -->
+            <cdk-tree-node *cdkTreeNodeDef="let node" cdkTreeNodePadding
+                           [style.display]="shouldRender(node) ? 'flex' : 'none'"
+                           class="example-tree-node">
+              <!-- use a disabled button to provide padding for tree leaf -->
+              <button mat-icon-button disabled></button>
+              <label class="checkbox">
+                <input type="checkbox" value="{{node.id}}" id="chkboxss{{node.id}}" name="checkboxTreGeneral"
+                  (change)="ngcheckTree($event.target)"   [checked]="checklistSelection.isSelected(node)"/>
+                <span> </span>
+                &nbsp;&nbsp;&nbsp;&nbsp;{{node.nombre}}
+              </label>
+            </cdk-tree-node>
+            <!-- This is the tree node template for expandable nodes -->
+            <cdk-tree-node *cdkTreeNodeDef="let node; when: hasChild" cdkTreeNodePadding
+                           [style.display]="shouldRender(node) ? 'flex' : 'none'"
+                           class="example-tree-node">
+              <button mat-icon-button cdkTreeNodeToggle
+                      [attr.aria-label]="'Toggle ' + node.nombre"
+                      (click)="node.isExpanded = !node.isExpanded"
+                      [style.visibility]="node.expandable ? 'visible' : 'hidden'">
+                <mat-icon class="mat-icon-rtl-mirror">
+                  {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                </mat-icon>
+              </button>
+              <label class="checkbox">
+                <input type="checkbox" value="{{node.id}}" id="chkboxss{{node.id}}" name="checkboxTreGeneral"
+                  (change)="ngcheckTree($event.target)"   [checked]="checklistSelection.isSelected(node)"/>
+                <span> </span>
+                &nbsp;&nbsp;&nbsp;&nbsp;{{node.nombre}}
+              </label>
+            </cdk-tree-node>
+          </cdk-tree>
+        </div>
+
+
+        <div class="col-lg-12 col-md-12 col-xs-12" style="margin-top: 5%;" *ngIf="disabled">
+          <div class="alert alert-primary" role="alert">
+            Al seleccionar o deseleccionar alguna de las casillas de permisos, se estará realizando un guardado
+            automático a los permisos del rol
+            , esto debido a la seguridad e integridad de la información, favor de revisar sus cambios antes de salir
+            de esta ventana.
+          </div>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+  <div class="modal-footer">
+    <ng-container *ngIf="rol">
+
+      <button type="submit" class="btn btn-primary btn-elevate" *ngIf="disabledButtonSave" (click)="save()"
+        [disabled]="formGroup.invalid">Guardar</button>
+    </ng-container>
+    <button type="button" class="btn btn-warning btn-elevate mr-2" (click)="modal.dismiss()">Cancelar</button>
+
+  </div>
+</div>

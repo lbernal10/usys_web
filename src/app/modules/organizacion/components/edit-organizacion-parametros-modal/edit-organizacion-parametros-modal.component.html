@@ -1,0 +1,59 @@
+<div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title h4" id="example-modal-sizes-title-lg">
+          Parámetros Organización
+      </div>
+    </div>
+    <div class="overlay overlay-block cursor-default modal-body" style="min-height: 404px;">
+      <ng-container *ngIf="isLoading$ | async">
+        <div class="overlay-layer bg-transparent">
+          <div class="spinner spinner-lg spinner-success"></div>
+        </div>
+      </ng-container>
+  
+      <ng-container *ngIf="pOrganizacion">
+        <form action="#" class="form form-label-right" [formGroup]="formGroup">
+          <div class="form-group row">
+            <div class="col-lg-10">
+              <label class="form-label">Espacio de almacenamiento</label>
+              <input type="text" class="form-control" name="espacio"
+              placeholder="Complete el campo" autocomplete="off" [class.is-invalid]="isControlInvalid('espacio')"
+                [class.is-valid]="isControlValid('espacio')" formControlName="espacio" />
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'espacio')">El campo es necesario</div>
+              <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'espacio')">Máximo 5 caracteres</div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-lg-10">
+              <label class="form-label">Límite de usuarios</label>
+              <input type="text" class="form-control" name="limiteUsuario"
+              placeholder="Complete el campo" autocomplete="off" [class.is-invalid]="isControlInvalid('limiteUsuario')"
+                [class.is-valid]="isControlValid('limiteUsuario')" formControlName="limiteUsuario" />
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'limiteUsuario')">El campo es necesario</div>
+              <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'limiteUsuario')">Máximo 5 caracteres</div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-lg-10">
+              <label class="form-label">Estatus</label>
+              <select class="form-control" name="estatus" formControlName="estatus">
+                <option [value]="1">Activo</option>
+                <option [value]="0">Inactivo</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'estatus')">Seleccione una opción</div>
+              <input type="hidden" class="form-control" name="idOrganizacion" autocomplete="off" formControlName="idOrganizacion" />
+            </div>
+          </div>
+        </form>
+      </ng-container>
+    </div>
+    <div class="modal-footer">
+      <ng-container *ngIf="pOrganizacion">
+  
+        <button type="submit" class="btn btn-primary btn-elevate" (click)="save()"
+          [disabled]="formGroup.invalid">Guardar</button>
+      </ng-container>
+      <button type="button" class="btn btn-warning btn-elevate mr-2" (click)="modal.dismiss()">Cancelar</button>
+      
+    </div>
+  </div>

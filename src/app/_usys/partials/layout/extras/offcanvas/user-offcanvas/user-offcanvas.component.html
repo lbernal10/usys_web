@@ -1,0 +1,89 @@
+<!-- begin::User Panel-->
+<div id="kt_quick_user" class="offcanvas p-10" [ngClass]="extrasUserOffcanvasDirection">
+  <ng-container *ngIf="user$ | async as _user">
+    <!--begin::Header-->
+    <div class="offcanvas-header d-flex align-items-center justify-content-between pb-5">
+      <h3 class="font-weight-bold m-0">
+        Detalles del perfil
+      </h3>
+      <a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_user_close">
+        <i class="ki ki-close icon-xs text-muted"></i>
+      </a>
+    </div>
+    <!--end::Header-->
+
+    <!--begin::Content-->
+    <div class="offcanvas-content pr-5 mr-n5">
+      <!--begin::Header-->
+      <div class="d-flex align-items-center mt-5">
+        <div class="symbol symbol-100 mr-5">
+          <div class="symbol-label" style="background-image: url('./assets/media/users/default.jpg');"></div>
+          <i class="symbol-badge bg-success"></i>
+        </div>
+        <div class="d-flex flex-column">
+          <a href="#" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">
+            {{ _user.empleado.persona.nombre }} {{ _user.empleado.persona.apellidoPaterno }}
+          </a>
+          <div class="text-muted mt-1">
+            {{ _user.tipoUsuario.nombre }}
+          </div>
+          <div class="navi mt-2">
+            <a class="btn btn-sm btn-light-primary font-weight-bolder py-2 px-5 cursor-pointer" (click)="logout()">Cerrar Sesión</a>
+          </div>
+        </div>
+      </div>
+      <!--end::Header-->
+
+      <!--begin::Separator-->
+      <div class="separator separator-dashed mt-8 mb-5"></div>
+      <!--end::Separator-->
+
+
+      <!--begin::Notifications-->
+      <div>
+
+        <!--begin::Item-->
+        <div class="d-flex align-items-center bg-light-warning rounded p-5 gutter-b">
+          <span class="svg-icon svg-icon-warning mr-5">
+            <span [inlineSVG]="'./assets/media/svg/icons/Communication/Mail.svg'" cacheSVG="true" class="svg-icon svg-icon-lg"></span>
+          </span>
+
+          <div class="d-flex flex-column flex-grow-1 mr-2">
+            <a class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">Correo electrónico</a>
+            <span class="text-muted font-size-sm" style="color: #15070780 !important;"> {{ _user.correo }}</span>
+          </div>
+
+        </div>
+        <!--end::Item-->
+
+        <!--begin::Item-->
+        <div class="d-flex align-items-center bg-light-success rounded p-5 gutter-b">
+          <span class="svg-icon svg-icon-success mr-5">
+            <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true" class="svg-icon svg-icon-lg"></span>
+          </span>
+          <div class="d-flex flex-column flex-grow-1 mr-2">
+            <a class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">Organización</a>
+            <span class="text-muted font-size-sm" style="color: #15070780 !important;">{{ _user.empleado.area.organizacion.razonSocial }}</span>
+          </div>
+        </div>
+        <!--end::Item-->
+
+        <!--begin::Item-->
+        <div class="d-flex align-items-center bg-light-danger rounded p-5 gutter-b">
+          <span class="svg-icon svg-icon-danger mr-5">
+            <span [inlineSVG]="'./assets/media/svg/icons/General/User.svg'" cacheSVG="true" class="svg-icon svg-icon-lg"></span>
+          </span>
+          <div class="d-flex flex-column flex-grow-1 mr-2">
+            <a class="font-weight-normel text-dark-75 text-hover-primary font-size-lg mb-1">Número de empleado</a>
+            <span class="text-muted font-size-sm" style="color: #15070780 !important;">{{ _user.empleado.numeroEmpleado }}</span>
+          </div>
+        </div>
+        <!--end::Item-->
+
+      </div>
+      <!--end::Notifications-->
+    </div>
+    <!--end::Content-->
+  </ng-container>
+</div>
+<!-- end::User Panel-->

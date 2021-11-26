@@ -1,0 +1,168 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <ng-container *ngIf="persona">
+        <ng-container *ngIf="persona.id">Editar</ng-container>
+        <ng-container *ngIf="!persona.id">Crear</ng-container>
+        Empleado
+        <ng-container *ngIf="persona.id">'{{persona.nombre}}'</ng-container>
+      </ng-container>
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
+    <ng-container *ngIf="isLoading$ | async">
+      <div class="overlay-layer bg-transparent">
+        <div class="spinner spinner-lg spinner-success"></div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="empleado">
+      <form action="#" class="form form-label-right" [formGroup]="formGroup">
+        <div class="form-group row">
+          <div class="col-lg-4 col-md-4 col-xs-12">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control form-control-lg form-control-solid" name="nombre"
+              [class.is-invalid]="isControlInvalid('nombre')" [class.is-valid]="isControlValid('nombre')"
+              placeholder="Nombre completo" autocomplete="off" formControlName="nombre" />
+            <div class="valid-feedback" *ngIf="isControlValid('nombre')">El nombre es correcto.</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'nombre')">El nombre es requerido.</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'nombre')">El nombre debera contar con un
+              minimo de 3 letras.</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'nombre')">El nombre deberá contar con un
+              maximo de 50 letras.</div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-xs-12">
+            <label class="form-label">Apellido Paterno</label>
+            <input type="text" class="form-control form-control-lg form-control-solid" name="apellido_paterno"
+              placeholder="Apellido paterno" autocomplete="off"
+              [class.is-invalid]="isControlInvalid('apellido_paterno')"
+              [class.is-valid]="isControlValid('apellido_paterno')" formControlName="apellido_paterno" />
+            <div class="valid-feedback" *ngIf="isControlValid('apellido_paterno')">El apellido paterno es correcto.
+            </div>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'apellido_paterno')">El apellido paterno es
+              requerido.</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'apellido_paterno')">El apellido paterno
+              debera contar con un minimo de 3 letras.</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('maxlength', 'apellido_paterno')">El apellido paterno
+              deberá contar con un maximo de 50 letras.</div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-xs-12">
+            <label class="form-label">Apellido Materno</label>
+            <input type="text" class="form-control form-control-lg form-control-solid" name="apellido_materno"
+              placeholder="Apellido materno" autocomplete="off"
+              [class.is-invalid]="isControlInvalid('apellido_materno')"
+              [class.is-valid]="isControlValid('apellido_materno')" formControlName="apellido_materno" />
+            <div class="valid-feedback" *ngIf="isControlValid('apellido_materno')">El apellido materno es correcto.
+            </div>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'apellido_materno')">El apellido materno es
+              requerido.</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'apellido_materno')">El apellido materno
+              debera contar con un minimo de 3 letras.</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('maxlength', 'apellido_materno')">El apellido materno
+              deberá contar con un maximo de 50 letras.</div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-lg-4 col-md-4 col-xs-12">
+            <label class="form-label">Correo Electronico</label>
+            <input type="email" class="form-control form-control-lg form-control-solid" name="correo_electronico"
+              [class.is-invalid]="isControlInvalid('correo_electronico')"
+              [class.is-valid]="isControlValid('correo_electronico')" placeholder="ejemplo@usys.com" autocomplete="off"
+              formControlName="correo_electronico" />
+            <div class="valid-feedback" *ngIf="isControlValid('correo_electronico')">El correo electronico es correcto.
+            </div>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'correo_electronico')">El correo
+              electronico es requerido.</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('email', 'correo_electronico')">El correo electronico
+              es incorrecto.</div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-xs-12">
+            <label class="form-label">Contraseña</label>
+            <input type="password" class="form-control form-control-lg form-control-solid" name="contrasena"
+              [class.is-invalid]="isControlInvalid('contrasena')" [class.is-valid]="isControlValid('contrasena')"
+              placeholder="********" autocomplete="off" formControlName="contrasena" />
+            <div class="valid-feedback" *ngIf="isControlValid('contrasena')">La contraseña es correcta.</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'contrasena')">La contraseña es requerida.
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-xs-12">
+            <label class="form-label">Confirma Contraseña</label>
+            <input type="password" class="form-control form-control-lg form-control-solid" name="conf_contrasena"
+              [class.is-invalid]="isControlInvalid('conf_contrasena')"
+              [class.is-valid]="isControlValid('conf_contrasena')" placeholder="********" autocomplete="off"
+              formControlName="conf_contrasena" />
+            <div class="valid-feedback" *ngIf="isControlValid('conf_contrasena')">La contraseña es correcta.</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'conf_contrasena')">La contraseña es
+              requerida.</div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-lg-4 col-md-4 col-xs-12">
+            <label class="form-label">Cargo</label>
+            <input type="email" class="form-control form-control-lg form-control-solid" name="cargo"
+              [class.is-invalid]="isControlInvalid('cargo')" [class.is-valid]="isControlValid('cargo')"
+              placeholder="cargo del empleado" autocomplete="off" formControlName="cargo" />
+            <div class="valid-feedback" *ngIf="isControlValid('cargo')">El cargo es correcto.</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'cargo')">El cargo es requerido.</div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-xs-12">
+            <label class="form-label">Puesto</label>
+            <input type="email" class="form-control form-control-lg form-control-solid" name="puesto"
+              [class.is-invalid]="isControlInvalid('puesto')" [class.is-valid]="isControlValid('puesto')"
+              placeholder="puesto del empleado" autocomplete="off" formControlName="puesto" />
+            <div class="valid-feedback" *ngIf="isControlValid('puesto')">El puesto es correcto.</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'puesto')">El puesto es requerido.</div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-xs-12">
+            <label>Fecha nacimiento</label>
+            <input type="date" class="form-control form-control-lg form-control-solid" name="fechaNacimiento"
+              [class.is-invalid]="isControlInvalid('fechaNacimiento')" [class.is-valid]="isControlValid('fechaNacimiento')"
+              placeholder="fecha de  nacimiento" autocomplete="off" formControlName="fechaNacimiento"  placeholder="fecha"/>
+            <div class="valid-feedback" *ngIf="isControlValid('puesto')">El puesto es correcto.</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'puesto')">El puesto es requerido.</div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-lg-4 col-md-4 col-xs-12">
+            <label>Rol</label>
+            <select class="form-control form-control-lg form-control-solid" name="rol" formControlName="rol"  (change)="ngcallRol($event.target.value)" [class.is-invalid]="isControlInvalid('rol')" [class.is-valid]="isControlValid('rol')">
+              <option [ngValue]="null" disabled>Elige un modulo</option>
+              <option *ngFor="let r of rol" [ngValue]="r.id">
+                {{ r.descripcion }}
+              </option>
+            </select>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'rol')">Por favor seleccione una <b>Rol</b></div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-xs-12">
+            <label>Area</label>
+            <select class="form-control form-control-lg form-control-solid" name="area" formControlName="area" (change)="ngcallArea($event.target.value)" [class.is-invalid]="isControlInvalid('area')" [class.is-valid]="isControlValid('area')">
+              <option [ngValue]="null" disabled>Elige un modulo</option>
+              <option *ngFor="let a of area" [ngValue]="a.id">
+                {{ a.nombre }}
+              </option>
+            </select>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'area')">Por favor seleccione una <b>Area</b></div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-xs-12">
+            <label>Genero</label>
+            <select class="form-control form-control-lg form-control-solid" name="genero" formControlName="genero" (change)="ngcallGenero($event.target.value)" [class.is-invalid]="isControlInvalid('genero')" [class.is-valid]="isControlValid('genero')">
+              <option [ngValue]="null" disabled>Elige un modulo</option>
+              <option *ngFor="let s of sexo" [ngValue]="s.id">
+                {{ s.nombre }}
+              </option>
+            </select>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'genero')">Por favor seleccione un <b>Genero</b></div>
+          </div>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-elevate mr-2" (click)="modal.dismiss()">Cancelar</button>
+    <ng-container *ngIf="empleado">
+
+      <button type="submit" class="btn btn-primary btn-elevate" (click)="save()"
+        [disabled]="formGroup.invalid">Guardar</button>
+    </ng-container>
+  </div>
+</div>

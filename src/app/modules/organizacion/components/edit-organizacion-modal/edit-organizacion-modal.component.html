@@ -1,0 +1,126 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <ng-container *ngIf="organizacion">
+        <ng-container *ngIf="organizacion.id">Editar</ng-container>
+        <ng-container *ngIf="!organizacion.id">Crear</ng-container>
+        Organización
+        <ng-container *ngIf="organizacion.id">«{{organizacion.razonSocial}}»  </ng-container>
+        <ng-container *ngIf="organizacion.estatus === 1">
+          <span class="label label-dot label-lg mr-2 label-primary"></span>
+        </ng-container>
+        <ng-container *ngIf="organizacion.estatus === 0">
+          <span class="label label-dot label-lg mr-2 label-light-danger"></span>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 404px;">
+    <ng-container *ngIf="isLoading$ | async">
+      <div class="overlay-layer bg-transparent">
+        <div class="spinner spinner-lg spinner-success"></div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="organizacion">
+      <form action="#" class="form form-label-right" [formGroup]="formGroup">
+        <div class="form-group row">
+          <div class="col-lg-10">
+            <label class="form-label">Razón Social*</label>
+            <input type="text" class="form-control" name="razonSocial" maxlength="150"
+            placeholder="Complete el campo" autocomplete="off" [class.is-invalid]="isControlInvalid('razonSocial')"
+              [class.is-valid]="isControlValid('razonSocial')" formControlName="razonSocial" />
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'razonSocial')">El campo es necesario</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'razonSocial')">Máximo 150 caracteres</div>
+          </div>
+          <div class="col-lg-2">
+            <label class="form-label">RFC</label>
+            <input type="text" class="form-control" name="rfc" maxlength="20"
+            placeholder="Complete el campo" autocomplete="off" [class.is-invalid]="isControlInvalid('rfc')"
+              [class.is-valid]="isControlValid('rfc')" formControlName="rfc" />
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'rfc')">El campo es necesario</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'rfc')">Máximo 20 caracteres</div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-lg-10">
+            <label class="form-label">Dirección</label>
+            <input type="text" class="form-control" name="direccion" maxlength="150"
+            placeholder="Complete el campo" autocomplete="off" [class.is-invalid]="isControlInvalid('direccion')"
+              [class.is-valid]="isControlValid('direccion')" formControlName="direccion" />
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'direccion')">El campo es necesario</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'direccion')">Máximo 150 caracteres</div>
+          </div>
+          <div class="col-lg-2">
+            <label class="form-label">Código Postal</label>
+            <input type="text" class="form-control" name="codigoPostal" maxlength="5"
+            placeholder="Complete el campo" autocomplete="off" [class.is-invalid]="isControlInvalid('codigoPostal')"
+              [class.is-valid]="isControlValid('codigoPostal')" formControlName="codigoPostal" />
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'codigoPostal')">El campo es necesario</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'codigoPostal')">Máximo 10 caracteres</div>
+          </div>
+        </div>
+        <div class="form-group row">
+          
+          <div class="col-lg-6">
+            <label class="form-label">Estado</label>
+            <select class="form-control" name="estado" placeholder="Filtrar por ciudad" formControlName="estado">
+              <option  *ngFor="let dato of estados" [value]="dato.nombre">{{dato.nombre}}</option>
+            </select>
+          </div>
+          <div class="col-lg-6">
+            <label class="form-label">Ciudad</label>
+            <select class="form-control" name="idMunicipio" placeholder="Filtrar por ciudad" formControlName="idMunicipio">
+            <option  *ngFor="let dato of ciudades" [value]="dato.id">{{dato.nombre}}</option>
+          </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-lg-6">
+            <label class="form-label">Teléfono</label>
+            <input type="text" class="form-control" name="telefono" maxlength="50"
+            placeholder="Complete el campo" autocomplete="off" [class.is-invalid]="isControlInvalid('telefono')"
+              [class.is-valid]="isControlValid('telefono')" formControlName="telefono" />
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'telefono')">El campo es necesario</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'telefono')">Máximo 50 caracteres</div>
+          </div>
+          <div class="col-lg-6">
+            <label class="form-label">Télefono Celular</label>
+            <input type="text" class="form-control" name="celular" maxlength="50"
+            placeholder="Complete el campo" autocomplete="off" [class.is-invalid]="isControlInvalid('celular')"
+              [class.is-valid]="isControlValid('celular')" formControlName="celular" />
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'celular')">El campo es necesario</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'direccion')">Máximo 50 caracteres</div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-lg-4">
+            <label class="form-label">Rubro</label>
+            <input type="text" class="form-control" name="rubro" maxlength="50"
+            placeholder="Complete el campo" autocomplete="off" [class.is-invalid]="isControlInvalid('rubro')"
+              [class.is-valid]="isControlValid('rubro')" formControlName="rubro" />
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'rubro')">El campo es necesario</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'direccion')">Máximo 50 caracteres</div>
+          </div>
+          <div class="col-lg-8">
+            <label class="form-label">Página Web</label>
+            <input type="text" class="form-control" name="web" maxlength="50"
+            placeholder="Complete el campo" autocomplete="off" [class.is-invalid]="isControlInvalid('web')"
+              [class.is-valid]="isControlValid('web')" formControlName="web" />
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'web')">El campo es necesario</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'direccion')">Máximo 150 caracteres</div>
+          </div>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+  <div class="modal-footer">
+    <ng-container *ngIf="organizacion">
+
+      <button type="submit" class="btn btn-primary btn-elevate" (click)="save()"
+        [disabled]="formGroup.invalid">Guardar</button>
+    </ng-container>
+    <button type="button" class="btn btn-warning btn-elevate mr-2" (click)="modal.dismiss()">Cancelar</button>
+    
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="d-flex flex-column flex-root h-100" id="kt_login_wrapper">
+    <!--begin::Login-->
+    <div class="login login-2 login-signin-on d-flex flex-column flex-lg-row flex-column-fluid bg-white" id="kt_login">
+
+
+        <div class="login-aside justify-content-center text-center order-2 order-lg-1 d-flex flex-row-auto position-relative overflow-hidden">
+            <!--begin::Content body-->
+            <div class="d-flex flex-column-fluid flex-center">
+                <router-outlet></router-outlet>
+            </div>
+            <!--end::Content body-->
+        </div>
+
+        <!--begin::Content-->
+        <div class="content order-1 order-lg-2 d-flex flex-column w-100 pb-0"  id="tsparticles" style="background-image: url('assets/media/bg/BG01.png');">
+            
+            <ng-particles [id]="id" [options]="particlesOptions" ></ng-particles>
+
+        </div>
+        
+    </div>
+    <!--end::Login-->
+</div>

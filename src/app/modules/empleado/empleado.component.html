@@ -1,0 +1,105 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Administración de empleados</h3>
+        </div>
+        <div class="card-toolbar">
+            <button type="button" class="btn btn-primary" (click)="create()"><i _ngcontent-sal-c154="" class="flaticon-plus"></i>Nuevo registro</button>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- begin: Filtration form -->
+        <div class="form form-label-right">
+            <div class="form-group row">
+                <div class="col-lg-2">
+                    <div class="row" [formGroup]="filterGroup">
+                      
+                            <select class="form-control" name="status" placeholder="Filter by Status" formControlName="status">
+                  <option value="">Todos</option>
+                  <option value="1">Activo</option>
+                  <option value="0">Suspendido</option>
+                </select><small class="form-text text-muted"><b>Filtrar</b> por estatus</small>
+                    
+                    </div>
+                </div>
+                <div class="col-lg-4" [formGroup]="searchGroup">
+                    <input type="text" class="form-control" name="searchText" placeholder="" value="" formControlName="searchTerm" /><small class="form-text text-muted"><b>Búsqueda</b> general</small>
+                </div>
+            </div>
+        </div>
+        <!-- end: Filtration form -->
+        
+        <!-- begin:Table -->
+        <div class="table-responsive angular-bootstrap-table">
+            <table class="table table-head-custom table-vertical-center overflow-hidden">
+                <thead>
+                    <th>
+                        NO. EMPLEADO
+                        <app-sort-icon column="noEmpleado" [activeColumn]="sorting.column" [activeDirection]="sorting.direction" (sort)="sort($event)"></app-sort-icon>
+                    </th>
+                    <th>
+                        NOMBRE
+                        <app-sort-icon column="nombre" [activeColumn]="sorting.column" [activeDirection]="sorting.direction" (sort)="sort($event)"></app-sort-icon>
+                    </th>
+                    <th>
+                        APELLIDO P
+                        <app-sort-icon column="apellidoPaterno" [activeColumn]="sorting.column" [activeDirection]="sorting.direction" (sort)="sort($event)"></app-sort-icon>
+                    </th>
+                    <th>
+                        APELLIDO M
+                        <app-sort-icon column="apellidoMaterno" [activeColumn]="sorting.column" [activeDirection]="sorting.direction" (sort)="sort($event)"></app-sort-icon>
+                    </th>
+                    <th>
+                        CORREO
+                        <app-sort-icon column="correoElectronico" [activeColumn]="sorting.column" [activeDirection]="sorting.direction" (sort)="sort($event)"></app-sort-icon>
+                    </th>
+                    <ng-container *ngIf="tipoUsuario === 1">
+                        <th>
+                            ORGANIZACIÓN
+                            <app-sort-icon column="apellidoMaterno" [activeColumn]="sorting.column" [activeDirection]="sorting.direction" (sort)="sort($event)"></app-sort-icon>
+                        </th>
+                    </ng-container>
+                    <ng-container *ngIf="tipoUsuario === 1">
+                    <th>
+                        ÁREA
+                        <app-sort-icon column="correoElectronico" [activeColumn]="sorting.column" [activeDirection]="sorting.direction" (sort)="sort($event)"></app-sort-icon>
+                    </th>
+                </ng-container>
+                    <th>ACCIONES</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let customEmpleado of EmplService.items$ | async">
+                        
+                        <td>{{ customEmpleado.numEmpleado }}</td>
+                        <td>{{ customEmpleado.nombre }}</td>
+                        <td>{{ customEmpleado.apellidoPaterno }}</td>
+                        <td>{{ customEmpleado.apellidoMaterno }}</td>
+                        <td>{{ customEmpleado.correo }}</td>
+                        <ng-container *ngIf="tipoUsuario === 1"><td>{{customEmpleado.razonSocial}}</td></ng-container>
+                        <ng-container *ngIf="tipoUsuario === 1"><td>{{customEmpleado.nombreArea}}</td></ng-container>
+                        <td>
+                            <span class="label label-dot label-primary mr-2" [class.label-danger]="customEmpleado.estatus === 0" [class.label-primary]="customEmpleado.estatus === 1"></span>&nbsp;<span class="font-bold font-primary">
+                                <ng-container *ngIf="customEmpleado.estatus === 0">Suspendido</ng-container>
+                                <ng-container *ngIf="customEmpleado.estatus === 1">Activo</ng-container>
+                              </span>
+                        </td>
+                        <td>
+
+                            <a title="Edit customer" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3" (click)="edit(customEmpleado.idEmpleado)">
+                                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                  </span>
+                            </a>
+
+                            <a title="Delete customer" class="btn btn-icon btn-light btn-hover-danger btn-sm" (click)="delete(customEmpleado.idEmpleado)">
+                                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                  </span>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- end: Table -->
+        <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator" [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
+    </div>
+</div>

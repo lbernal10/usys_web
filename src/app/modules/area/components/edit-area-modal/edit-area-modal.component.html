@@ -1,0 +1,44 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <ng-container *ngIf="area">
+        <ng-container *ngIf="area.id">Editar</ng-container>
+        <ng-container *ngIf="!area.id">Crear</ng-container>
+        Área
+        <ng-container *ngIf="area.id">'{{area.nombre}}'</ng-container>
+      </ng-container>
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
+    <ng-container *ngIf="isLoading$ | async">
+      <div class="overlay-layer bg-transparent">
+        <div class="spinner spinner-lg spinner-success"></div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="area">
+      <form action="#" class="form form-label-right" [formGroup]="formGroup">
+        <div class="form-group row">
+          <div class="col-lg-12">
+            <label class="form-label">Descripción</label>
+            <input type="text" class="form-control form-control-lg form-control-solid" name="nombre"
+              placeholder="Descripción" autocomplete="off" [class.is-invalid]="isControlInvalid('nombre')"
+              [class.is-valid]="isControlValid('nombre')" formControlName="nombre" />
+            <div class="valid-feedback" *ngIf="isControlValid('nombre')">La descripcción es incorrecta.</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'nombre')">La descripción es requerida.</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'nombre')">La descripción debera contar con un minimo de 3 letras.</div>
+            <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'nombre')">La descripcción deberá contar con un maximo de 50 letras.</div>
+          </div>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-elevate mr-2" (click)="modal.dismiss()">Cancelar</button>
+    <ng-container *ngIf="area">
+
+      <button type="submit" class="btn btn-primary btn-elevate" (click)="save()"
+        [disabled]="formGroup.invalid">Guardar</button>
+    </ng-container>
+  </div>
+</div>
