@@ -47,6 +47,7 @@
     "socicon": "^3.0.5",
     "sweetalert2": "^11.0.18",
     "tsparticles": "^1.32.0",
+    "ngx-window-token": "^5.0.0",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
