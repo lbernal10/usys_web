@@ -29,7 +29,7 @@ export class AuthHTTPService {
       Authorization: `Bearer ${token}`,
     });
 
-    return this.http.get<UserModel>(`${environment.backend}/api/usuarios/detalleLogin/${correo}`, { headers: httpHeaders, });
+    return this.http.get<UserModel>(`${environment.backend}/usuarios/detalleLogin/${correo}`, { headers: httpHeaders, });
   }
 
 }

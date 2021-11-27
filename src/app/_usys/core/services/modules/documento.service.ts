@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy, Inject, Input } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { TableService, TableResponseModel, ITableState} from '../../../crud-table';
 import { Documento } from '../../models/documento.model';
 import { Observable } from 'rxjs';
@@ -14,14 +14,23 @@ export class DocumentoService  extends TableService<Documento> implements OnDest
   //valores default para carga inicial
   URL: string;
   public texto = '';
+  private authLocalStorageToken = `${environment.appVersion}-${environment.USERDATA_KEY}`;
+
   constructor(@Inject(HttpClient) http) {
     super(http);
   }
 
 // READ
 findDocumentos(tableState: ITableState, fil, apa, mo): Observable<TableResponseModel<Documento>> {
-    this.URL = `${environment.backend}/documento/buscar/${JSON.parse( localStorage.getItem('svariable')).idOrganizacion}/${fil}/${apa}/${mo}/${JSON.parse( localStorage.getItem('svariable')).directorios}/`;
-    return this.http.get<Documento[]>(this.URL).pipe(
+    const authData = JSON.parse( localStorage.getItem(this.authLocalStorageToken) );
+  console.log("Variable: " + JSON.stringify( authData ))
+    this.URL = `${environment.backend}/documento/buscar/${authData.idOrganizacion}/${fil}/${apa}/${mo}/${authData.directorios}/`;
+
+    const httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${authData.access_token}`,
+    }); 
+
+    return this.http.get<Documento[]>(this.URL, { headers: httpHeaders, }).pipe(
     map((response: Documento[]) => {
       const filteredResult = baseFilter(response, tableState);
       const result: TableResponseModel<Documento> = {
@@ -36,7 +45,13 @@ ngOnDestroy() {
   this.subscriptions.forEach(sb => sb.unsubscribe());
 }
   obtenerTotalDocumentos(filtro): Observable<any> {
-    return this.http.get(`${environment.backend}/documento/buscar/total/${JSON.parse( localStorage.getItem('svariable')).orgID}/${filtro}/${JSON.parse( localStorage.getItem('svariable')).directory}/`)
+    const authData = JSON.parse( localStorage.getItem(this.authLocalStorageToken) );
+
+    const httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${authData.access_token}`,
+    }); 
+
+    return this.http.get(`${environment.backend}/documento/buscar/total/${authData.idOrganizacion}/${filtro}/${authData.directorios}/`, { headers: httpHeaders, })
     .pipe(
       map(response => response as any)
     );

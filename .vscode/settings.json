@@ -1,4 +1,7 @@
 {
     "appService.defaultWebAppToDeploy": "/subscriptions/0484affb-22d1-4a90-9f40-af561ad3e912/resourceGroups/usys/providers/Microsoft.Web/sites/usys",
-    "appService.deploySubpath": "dist\\Usys"
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ]
 }
