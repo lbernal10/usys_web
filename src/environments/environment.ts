@@ -10,7 +10,7 @@ export const environment = {
   apiUrl: 'api',
   //backend: 'http://localhost:8080',
   backend: 'https://usysback.azurewebsites.net/api',
-  tokenURL: 'http://localhost:8080/oauth/token',
+  tokenURL: 'https://usysback.azurewebsites.net/oauth/token',
   usuarioToken: 'usysweb',
   passwordToken: '12345',
 };

@@ -19,7 +19,7 @@ export class LoginService extends TableService<tokenModel> implements OnDestroy{
   
   obtenerToken(correo: string, password: string):Observable<any>{
     
-    const urlEndPoint = 'http://localhost:8080/oauth/token';
+    const urlEndPoint = 'https://usysback.azurewebsites.net/oauth/token';
     const credenciales = btoa('usysweb' + ':' + '12345');
 
     const httpHeaders = new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded',
