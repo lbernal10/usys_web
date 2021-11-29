@@ -1,0 +1,48 @@
+<ng-container *ngIf="isLoading">
+    <div class="progress progress-modal">
+      <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
+        style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+  </ng-container>
+  
+  <div class="modal-header">
+    <div class="modal-title h4">Subir documento</div>
+  </div>
+  <div class="modal-body">
+    <input type="file" class="file-input"
+       (change)="onFileSelected($event)" #fileUpload>
+
+<div class="file-upload">
+
+   {{fileName || "No file uploaded yet."}}
+
+    <button mat-mini-fab color="primary" class="upload-btn"
+      (click)="fileUpload.click()">
+        <mat-icon>attach_file</mat-icon>
+    </button>
+</div>
+<br />
+<div class="progress">
+
+  <mat-progress-bar class="progress-bar" mode="determinate"
+                    [value]="uploadProgress" *ngIf="uploadProgress">
+
+  </mat-progress-bar>
+
+  <mat-icon class="cancel-upload" (click)="cancelUpload()" 
+            *ngIf="uploadProgress">delete_forever</mat-icon>
+
+</div>
+
+  </div>
+
+  
+
+  
+  <div class="modal-footer">
+    <div>
+      <button type="button" class="btn btn-primary btn-elevate" (click)="savefile()" >
+        Guardar
+      </button>
+    </div>
+  </div>

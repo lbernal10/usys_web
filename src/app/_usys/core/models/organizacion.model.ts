@@ -1,4 +1,6 @@
-export interface Organizacion {
+import { AuthModel } from "src/app/modules/auth/_models/auth.model";
+
+export interface Organizacion extends AuthModel {
   id: number;
   razonSocial: string;
   rfc: string;

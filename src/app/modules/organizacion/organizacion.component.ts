@@ -43,7 +43,7 @@ isLoading: boolean;
 filterGroup: FormGroup;
 searchGroup: FormGroup;
 private subscriptions: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
-MODULO = 'organizacion';
+MODULO = 'organizaciones';
 constructor(
   private fb: FormBuilder,
   private modalService: NgbModal,
@@ -56,7 +56,7 @@ constructor(
     console.log('idor en org ' + JSON.parse( localStorage.getItem('svariable')).orgID);
     this.filterForm();
     this.searchForm();
-    this.OrgService.fetch(this.MODULO);
+    this.OrgService.fetchByIdorganizacion(this.MODULO, JSON.parse( localStorage.getItem('svariable')).orgID);
     this.grouping = this.OrgService.grouping;
     this.paginator = this.OrgService.paginator;
     this.sorting = this.OrgService.sorting;

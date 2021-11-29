@@ -28,6 +28,10 @@ const EMPTY_ORGANIZACION: Organizacion = {
   fechaCreacion: new Date(),
   rubro: '',
   web: '',
+  access_token: undefined,
+  expires_in: undefined,
+  refresh_token: undefined,
+  setAuth: undefined
 };
 const EMPTY_PARAMORGANIZACION: ParametroOrganizacion = {
   id: undefined,

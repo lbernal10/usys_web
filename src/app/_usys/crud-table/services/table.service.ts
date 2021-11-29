@@ -1,15 +1,18 @@
 // tslint:disable:variable-name
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
 import { PaginatorState } from '../models/paginator.model';
 import { ITableState, TableResponseModel } from '../models/table.model';
+import { ITableState2, TableResponseModel2 } from '../models/table2.model';
 import { BaseModel } from '../models/base.model';
 import { SortState } from '../models/sort.model';
 import { GroupingState } from '../models/grouping.model';
 import Swal from 'sweetalert2';
 import { Directorio } from '../../core/models/directorio.model';
 import { environment } from '../../../../environments/environment';
+import { AuthModel } from 'src/app/modules/auth/_models/auth.model';
+import { BaseModel2 } from '..';
 
 const DEFAULT_STATE: ITableState = {
   filter: {},
@@ -28,6 +31,7 @@ export abstract class TableService<T> {
   private _tableState$ = new BehaviorSubject<ITableState>(DEFAULT_STATE);
   private _errorMessage = new BehaviorSubject<string>('');
   private _subscriptions: Subscription[] = [];
+  private authLocalStorageTokenTablaService = `${environment.appVersion}-${environment.USERDATA_KEY}`;
 
   // Getters
   get items$() {
@@ -104,9 +108,17 @@ export abstract class TableService<T> {
 
   // READ (Returning filtered list of entities)
   find(tableState: ITableState): Observable<TableResponseModel<T>> {
-    const url = this.API_URL +'/'+  this.MODAL + '/listar';
+    const auth = this.getAuthFromLocalStorageTableService();
+    if (!auth || !auth.access_token) {
+      return of(undefined);
+    }
+    
+    const httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${auth.access_token}`,
+    });
+    const url = this.API_URL +'/'+  this.MODAL + '/';
     this._errorMessage.next('');
-    return this.http.post<TableResponseModel<T>>(url, tableState).pipe(
+    return this.http.post<TableResponseModel<T>>(url, tableState, {headers: httpHeaders}).pipe(
       catchError(err => {
         this._errorMessage.next(err);
         console.error('FIND ITEMS', err);
@@ -118,9 +130,17 @@ export abstract class TableService<T> {
   // READ (Returning filtered list of entities)
   findById(tableState: ITableState, id: number): Observable<TableResponseModel<T>> {
     //const url = this.API_URL +  this.MODAL + '/listarIdOrganizacion/'+id;
-    const url = `${this.API_URL}/${this.MODAL}/listarIdOrganizacion/${id}`;
+    const auth = this.getAuthFromLocalStorageTableService();
+    if (!auth || !auth.access_token) {
+      return of(undefined);
+    }
+    
+    const httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${auth.access_token}`,
+    });
+    const url = `${this.API_URL}/${this.MODAL}/${id}`;
     this._errorMessage.next('');
-    return this.http.post<TableResponseModel<T>>(url, tableState).pipe(
+    return this.http.post<TableResponseModel<T>>(url, tableState, {headers: httpHeaders}).pipe(
       catchError(err => {
         this._errorMessage.next(err);
         console.error('FIND ITEMS', err);
@@ -132,7 +152,7 @@ export abstract class TableService<T> {
   getItemById(id: number): Observable<BaseModel> {
     this._isLoading$.next(true);
     this._errorMessage.next('');
-    const url = `${this.API_URL}/${ this.MODAL}/ver/${id}`;
+    const url = `${this.API_URL}/${ this.MODAL}/${id}`;
     console.log(url)
     return this.http.get<BaseModel>(url).pipe(
       catchError(err => {
@@ -349,7 +369,6 @@ findDocumentos(tableState: ITableState, idOrganizacion?:number, filtro?:string, 
     const request = this.find(this._tableState$.value)
       .pipe(
         tap((res: TableResponseModel<T>) => {
-          console.log(res)
           this._items$.next(res.items);
           this.patchStateWithoutFetch({
             paginator: this._tableState$.value.paginator.recalculatePaginator(
@@ -377,6 +396,7 @@ findDocumentos(tableState: ITableState, idOrganizacion?:number, filtro?:string, 
       )
       .subscribe();
     this._subscriptions.push(request);
+    console.log(request);
   }
 
   public fetchByIdorganizacion( modulo: string, idOrganizacion) {
@@ -403,7 +423,7 @@ findDocumentos(tableState: ITableState, idOrganizacion?:number, filtro?:string, 
         finalize(() => {
           this._isLoading$.next(false);
           const itemIds = this._items$.value.map((el: T) => {
-            const item = (el as unknown) as BaseModel;
+            const item = (el as unknown) as BaseModel2;
             return item.id;
           });
           this.patchStateWithoutFetch({
@@ -662,6 +682,15 @@ findDocumentos(tableState: ITableState, idOrganizacion?:number, filtro?:string, 
       }),
       finalize(() => this._isLoading$.next(false))
     );*/
+  }
+  private getAuthFromLocalStorageTableService(): AuthModel {
+    try {
+      const authData = JSON.parse( localStorage.getItem(this.authLocalStorageTokenTablaService) );
+      return authData;
+    } catch (error) {
+      console.error(error);
+      return undefined;
+    }
   }
 
 }

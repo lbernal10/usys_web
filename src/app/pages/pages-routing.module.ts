@@ -49,6 +49,11 @@ const routes: Routes = [
           import('../modules/permiso/permiso.module').then((m) => m.PermisoModule),
       },
       {
+        path: 'documento',
+        loadChildren: () =>
+          import('../modules/documento/documento.module').then((m) => m.DocumentoModule),
+      },
+      {
         path: 'catalogo',
         loadChildren: () =>
           import('../modules/catalogo/catalogo.module').then(

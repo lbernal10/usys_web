@@ -1,0 +1,45 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Administración de documentos</h3>
+        </div>
+    </div>
+    <div class="card-body">
+      <div class="form form-label-right">
+        <div class="form-group row">
+          <div class="col-lg-6" [formGroup]="">
+            <div class="row">
+
+              <label class="form-label">Selección de área*</label>
+              <select class="form-control" name="status" placeholder="Filtrar por áreas" formControlName="status">
+              <option value="1">Sucursal León</option>
+              </select><small class="form-text text-muted"><b>Buscar directorios</b> por área</small>
+                
+            </div>
+          </div>
+        </div>  
+      </div>
+      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+        <!-- This is the tree node template for leaf nodes -->
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+          <!-- use a disabled button to provide padding for tree leaf -->
+          <button mat-icon-button disabled></button>
+          {{node.name}}
+          <button mat-icon-button color="primary" (click)="openFileUpload(node)"><mat-icon>cloud_upload</mat-icon></button>
+          <button mat-icon-button color="primary"><mat-icon>create_new_folder</mat-icon></button>
+        </mat-tree-node>
+        <!-- This is the tree node template for expandable nodes -->
+        <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+          <button mat-icon-button matTreeNodeToggle
+                  [attr.aria-label]="'Toggle ' + node.name">
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
+          </button>
+          {{node.name}}
+          <button mat-icon-button color="primary" (click)="openFileUpload(node)"><mat-icon>cloud_upload</mat-icon></button>
+          <button mat-icon-button color="primary"><mat-icon>create_new_folder</mat-icon></button>
+        </mat-tree-node>
+      </mat-tree>
+    </div>
+</div>

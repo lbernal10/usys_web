@@ -6,6 +6,7 @@ export * from './models/grouping.model';
 export * from './models/search.model';
 export * from './models/filter.model';
 export { BaseModel } from './models/base.model';
+export { BaseModel2 } from './models/base2.model';
 // Directives
 // Services
 export * from './services/table.service';
