@@ -18,13 +18,10 @@ export class OrganizacionService  extends TableService<Organizacion> implements 
   constructor(@Inject(HttpClient) http) {
     super(http);
   }
-  OnInit(){
-    
-  }
-
+ 
   // READ
   find(tableState: ITableState): Observable<TableResponseModel<Organizacion>> {
-    const auth = this.getAuthFromLocalStorage();
+    const auth = JSON.parse( localStorage.getItem(this.authLocalStorageToken) );
     if (!auth || !auth.access_token) {
       return of(undefined);
     }
@@ -32,12 +29,15 @@ export class OrganizacionService  extends TableService<Organizacion> implements 
     const httpHeaders = new HttpHeaders({
       Authorization: `Bearer ${auth.access_token}`,
     });
-    if (JSON.parse( localStorage.getItem('svariable')).userType === 1){
+    const idOrg = JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idOrganizacion;
+    const idTipoU = JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idTipoUsuario;
+
+    if (idTipoU === 1){
       this.URL = `${environment.backend}/organizaciones/`;
-    }else if(JSON.parse( localStorage.getItem('svariable')).userType === 2){
-      this.URL = `${environment.backend}/organizaciones/${JSON.parse( localStorage.getItem('svariable')).orgID}`;
+    }else if(idTipoU === 2){
+      this.URL = `${environment.backend}/organizaciones/${idOrg}`;
     }else{
-      this.URL = `${environment.backend}/organizaciones/${JSON.parse( localStorage.getItem('svariable')).orgID}`;
+      this.URL = `${environment.backend}/organizaciones/${idOrg}`;
       console.log(this.URL)
     }
 

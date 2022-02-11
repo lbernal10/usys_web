@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy, Inject } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { TableService, TableResponseModel, ITableState} from '../../../../_usys/crud-table';
 import { Area } from '../../models/area.model';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { baseFilter } from '../../../../_fake/fake-helpers/http-extenstions';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
   providedIn: "root",
 })
 export class AreaService  extends TableService<Area> implements OnDestroy{
+  private authLocalStorageToken = `${environment.appVersion}-${environment.USERDATA_KEY}`;
   URL: string;
   constructor(@Inject(HttpClient) http) {
     super(http);
@@ -17,16 +18,27 @@ export class AreaService  extends TableService<Area> implements OnDestroy{
 
   // READ
   find(tableState: ITableState): Observable<TableResponseModel<Area>> {
-    if (JSON.parse( localStorage.getItem('svariable')).userType === 1){
-      this.URL = `${environment.backend}/area/listar`;
-    }else if(JSON.parse( localStorage.getItem('svariable')).userType === 2){
-      this.URL = `${environment.backend}/area/organizacion/${JSON.parse( localStorage.getItem('svariable')).orgID}`;
+
+    const auth = JSON.parse( localStorage.getItem(this.authLocalStorageToken) );
+    if (!auth || !auth.access_token) {
+      return of(undefined);
+    }
+    
+    const httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${auth.access_token}`,
+    });
+
+    if (JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idTipoUsuario === 1){
+      //this.URL = `${environment.backend}/area/listar`;
+      this.URL = `${environment.backend}/areas/organizacion/${JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idOrganizacion}`;
+    }else if(JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idTipoUsuario === 2){
+      this.URL = `${environment.backend}/areas/organizacion/${JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idOrganizacion}`;
     }else{
-      this.URL = `${environment.backend}/area/organizacion/${JSON.parse( localStorage.getItem('svariable')).orgID}`;
+      this.URL = `${environment.backend}/areas/organizacion/${JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idOrganizacion}`;
       console.log(this.URL)
     }
 
-    return this.http.get<Area[]>(this.URL).pipe(
+    return this.http.get<Area[]>(this.URL, {headers: httpHeaders}).pipe(
       map((response: Area[]) => {
         const filteredResult = baseFilter(response, tableState);
         const result: TableResponseModel<Area> = {

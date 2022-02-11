@@ -65,7 +65,7 @@
           <div class="col-lg-6">
             <label class="form-label">Estado</label>
             <select class="form-control" name="estado" placeholder="Filtrar por ciudad" formControlName="estado">
-              <option  *ngFor="let dato of estados" [value]="dato.nombre">{{dato.nombre}}</option>
+              <option  *ngFor="let dato of estados" [value]="dato.id">{{dato.nombre}}</option>
             </select>
           </div>
           <div class="col-lg-6">

@@ -1,4 +1,6 @@
-export interface CustomEmpleado {
+import { AuthModel } from "src/app/modules/auth/_models/auth.model";
+
+export interface CustomEmpleado extends AuthModel{
 
     idUsuario: number;
     idEmpleado: number;

@@ -1,3 +1,15 @@
 .file-input {
     display: none;
   }
+
+  ::ng-deep .mat-progress-bar-fill::after {
+    background-color: #57a11a;
+}
+
+::ng-deep .mat-progress-bar-buffer {
+    background: #E4E8EB;
+}
+
+::ng-deep .mat-progress-bar {
+    border-radius: 2px;
+}

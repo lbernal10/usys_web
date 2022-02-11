@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
 import { AuthService } from './modules/auth/_services/auth.service';
 import { environment } from 'src/environments/environment';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
- 
+import { MatCardModule } from '@angular/material/card';
 
 // Highlight JS
 import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
@@ -51,7 +51,7 @@ function appInitializer(authService: AuthService) {
     // #fake-end#
     AppRoutingModule,
     InlineSVGModule.forRoot(),
-    NgbModule,
+    NgbModule, MatCardModule
   ],
   providers: [
     {

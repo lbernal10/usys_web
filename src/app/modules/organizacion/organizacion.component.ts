@@ -20,6 +20,7 @@ import { DeleteOrganizacionModalComponent } from './components/delete-organizaci
 import { EditOrganizacionModalComponent } from './components/edit-organizacion-modal/edit-organizacion-modal.component';
 import { OrganizacionService } from '../../_usys/core/services/modules/organizacion.service';
 import {EditOrganizacionParametrosModalComponent} from './components/edit-organizacion-parametros-modal/edit-organizacion-parametros-modal.component';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-organizacion',
   templateUrl: './organizacion.component.html',
@@ -53,10 +54,12 @@ constructor(
 
   // angular lifecircle hooks
   ngOnInit(): void {
-    console.log('idor en org ' + JSON.parse( localStorage.getItem('svariable')).orgID);
+    console.log(localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`));
+    const idOrg = JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idOrganizacion;
     this.filterForm();
     this.searchForm();
-    this.OrgService.fetchByIdorganizacion(this.MODULO, JSON.parse( localStorage.getItem('svariable')).orgID);
+    this.OrgService.fetchByIdorganizacion(this.MODULO, idOrg);
+    console.log(this.OrgService);
     this.grouping = this.OrgService.grouping;
     this.paginator = this.OrgService.paginator;
     this.sorting = this.OrgService.sorting;
@@ -148,7 +151,7 @@ constructor(
     const modalRef = this.modalService.open(EditOrganizacionModalComponent, { size: 'xl' });
     modalRef.componentInstance.id = id;
     modalRef.result.then(() =>
-      this.OrgService.fetch(this.MODULO),
+      this.OrgService.fetchByIdorganizacion(this.MODULO, id),
       () => { }
     );
   }

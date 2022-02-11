@@ -18,6 +18,7 @@ import {
 import { DeleteAreaModalComponent } from './components/delete-area-modal/delete-area-modal.component';
 import { EditAreaModalComponent } from './components/edit-area-modal/edit-area-modal.component';
 import { AreaService } from '../../_usys/core/services/modules/area.service';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-area',
   templateUrl: './area.component.html',
@@ -42,7 +43,7 @@ filterGroup: FormGroup;
 searchGroup: FormGroup;
 tipoUsuario: number;
 private subscriptions: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
-MODULO = 'area';
+MODULO = 'areas';
 constructor(
   private fb: FormBuilder,
   private modalService: NgbModal,
@@ -52,7 +53,7 @@ constructor(
 
   // angular lifecircle hooks
   ngOnInit(): void {
-    this.tipoUsuario = JSON.parse( localStorage.getItem('svariable')).userType;
+    this.tipoUsuario = JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idTipoUsuario;
     this.filterForm();
     this.searchForm();
     this.AreaService.fetch(this.MODULO);
@@ -60,6 +61,7 @@ constructor(
     this.paginator = this.AreaService.paginator;
     this.sorting = this.AreaService.sorting;
     const sb = this.AreaService.isLoading$.subscribe(res => this.isLoading = res);
+    console.log(this.AreaService);
     this.subscriptions.push(sb);
   }
 

@@ -19,7 +19,7 @@ const EMPTY_ORGANIZACION: ParametroOrganizacion = {
 })
 export class EditOrganizacionParametrosModalComponent implements OnInit , OnDestroy {
   @Input() id: number;
-  MODULO = 'ParametroOrganizacion';
+  MODULO = 'parametrosOrganizacion';
   isLoading$;
   pOrganizacion: ParametroOrganizacion;
   formGroup: FormGroup;
@@ -40,7 +40,7 @@ export class EditOrganizacionParametrosModalComponent implements OnInit , OnDest
     this.pOrganizacion = EMPTY_ORGANIZACION;
     this.loadForm();
     } else {
-      const sb = this.pOrgService.getItemByIdParametroOrganizacion(this.id, this.MODULO + '/ver/organizacion').pipe(
+      const sb = this.pOrgService.getItemByIdParametroOrganizacion(this.id, this.MODULO ).pipe(
         first(),
         catchError((errorMessage) => {
           this.modal.dismiss(errorMessage);
@@ -71,7 +71,7 @@ export class EditOrganizacionParametrosModalComponent implements OnInit , OnDest
   }
 
   edit() {
-    const sbUpdate = this.pOrgService.update(this.pOrganizacion, 'ParametroOrganizacion/editar/').pipe(
+    const sbUpdate = this.pOrgService.update(this.pOrganizacion, 'ParametrosOrganizacion/actualizar/').pipe(
       tap(() => {
         this.modal.close();
       }),

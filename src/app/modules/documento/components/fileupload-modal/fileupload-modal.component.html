@@ -1,48 +1,86 @@
 <ng-container *ngIf="isLoading">
-    <div class="progress progress-modal">
-      <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
-        style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-    </div>
-  </ng-container>
-  
-  <div class="modal-header">
-    <div class="modal-title h4">Subir documento</div>
+  <div class="progress progress-modal">
+    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
+      style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
   </div>
-  <div class="modal-body">
-    <input type="file" class="file-input"
-       (change)="onFileSelected($event)" #fileUpload>
+</ng-container>
 
-<div class="file-upload">
+<div class="modal-header">
+  <div class="modal-title h4">Subir documento a : {{directorioSelect.name}}</div>
+</div>
+<div class="modal-body">
 
-   {{fileName || "No file uploaded yet."}}
 
-    <button mat-mini-fab color="primary" class="upload-btn"
-      (click)="fileUpload.click()">
-        <mat-icon>attach_file</mat-icon>
+
+<!--
+  <input type="file" class="file-input" multiple="multiple" (change)="onFileSelected($event)" #fileUpload>
+
+  <div class="file-upload">
+
+    {{"Documentos adjuntos" || "No hay archivos adjuntos."}}
+
+    <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
+      <mat-icon>attach_file</mat-icon>
     </button>
-</div>
-<br />
-<div class="progress">
+  </div>
+  <br />
+  {{fileName}} - {{uploadProgress}}%
+  <div class="progress">
 
-  <mat-progress-bar class="progress-bar" mode="determinate"
-                    [value]="uploadProgress" *ngIf="uploadProgress">
+    <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" *ngIf="uploadProgress">
 
-  </mat-progress-bar>
+    </mat-progress-bar>
 
-  <mat-icon class="cancel-upload" (click)="cancelUpload()" 
-            *ngIf="uploadProgress">delete_forever</mat-icon>
-
-</div>
+    <mat-icon class="cancel-upload" (click)="cancelUpload()" *ngIf="uploadProgress">delete_forever</mat-icon>
 
   </div>
+-->
 
-  
-
-  
-  <div class="modal-footer">
-    <div>
-      <button type="button" class="btn btn-primary btn-elevate" (click)="savefile()" >
-        Guardar
-      </button>
-    </div>
+<div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="center">
+  <div fxFlex="25%">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Cargar documento(s)</mat-card-title>
+        <mat-card-subtitle>
+          <span *ngIf="selectedFiles !== undefined">{{selectedFiles.length}} file(s) selected</span>
+        </mat-card-subtitle>
+        <mat-card-subtitle>
+          <input #fileInput type="file" (change)="selectFile($event)" style="display:none;" ngModel multiple/>
+          <mat-form-field class="example-full-width" (click)="fileInput.click()">
+            <input matInput placeholder="Adjuntar documento(s)"
+                   value="{{fileInput.value.substr(fileInput.value.lastIndexOf('\\')+1)}}">
+            <mat-icon matSuffix>folder_open</mat-icon>
+          </mat-form-field>
+          &nbsp;
+          <!--<button mat-raised-button color="primary" (click)="upload()">Upload</button>-->
+        </mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
   </div>
+  <div fxFlex="25%">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title *ngIf="!showProgress">No hay archivos...</mat-card-title>
+        <mat-card-title *ngIf="showProgress">Archivos</mat-card-title>
+        <mat-card-subtitle *ngFor="let uploadedFile of uploadedFiles">
+          <mat-icon>insert_drive_file</mat-icon>
+          {{uploadedFile.name}} - {{uploadedFile.size}} - {{uploadedFile.progress}}%
+          <mat-progress-bar mode="determinate" value="{{uploadedFile.progress}}"></mat-progress-bar>
+        </mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</div>
+</div>
+
+
+
+
+<div class="modal-footer">
+  <div>
+    <button type="button" id="btncancel" class="btn btn-warning btn-elevate mr-2" (click)="modal.dismiss()">Cancelar</button>
+    <button type="button" id="buttonUpload" class="btn btn-primary btn-elevate" (click)="upload()">
+      Subir
+    </button>
+  </div>
+</div>

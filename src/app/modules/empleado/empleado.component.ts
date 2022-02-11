@@ -19,6 +19,7 @@ import {
 import { DeleteEmpleadoModalComponent } from './components/delete-empleado-modal/delete-empleado-modal.component';
 import { EditEmpleadoModalComponent } from './components/edit-empleado-modal/edit-empleado-modal.component';
 import { EmpleadoService } from '../../_usys/core/services/modules/empleado.service';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-empleado',
   templateUrl: './empleado.component.html',
@@ -53,8 +54,7 @@ constructor(
 
   // angular lifecircle hooks
   ngOnInit(): void {
-    this.tipoUsuario = JSON.parse( localStorage.getItem('svariable')).userType;
-
+    this.tipoUsuario = JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idTipoUsuario;
     this.filterForm();
     this.searchForm();
     this.EmplService.fetch(this.MODULO);
@@ -62,6 +62,7 @@ constructor(
     this.paginator = this.EmplService.paginator;
     this.sorting = this.EmplService.sorting;
     const sb = this.EmplService.isLoading$.subscribe(res => this.isLoading = res);
+    console.log(this.EmplService);
     this.subscriptions.push(sb);
   }
 

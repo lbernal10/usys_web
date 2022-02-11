@@ -63,9 +63,9 @@
                         <td>{{ org.rfc }}</td>
                         <td>{{ org.rubro }}</td>
                         <td>
-                            <span class="label label-dot label-primary mr-2" [class.label-danger]="org.estatus === 0" [class.label-primary]="org.estatus === 1"></span>&nbsp;<span class="font-bold font-primary">
-                                <ng-container *ngIf="org.estatus === 0">Suspendido</ng-container>
-                                <ng-container *ngIf="org.estatus === 1">Activo</ng-container>
+                            <span class="label label-dot label-primary mr-2" [class.label-danger]="org.estatus === false" [class.label-primary]="org.estatus === true"></span>&nbsp;<span class="font-bold font-primary">
+                                <ng-container *ngIf="org.estatus === false">Suspendido</ng-container>
+                                <ng-container *ngIf="org.estatus === true">Activo</ng-container>
                               </span>
                         </td>
                         <td>{{ org.telefono }}</td>
@@ -80,7 +80,7 @@
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
                   </span>
                             </a>
-                            <a title="Configurar párametros" class="btn btn-icon btn-light btn-hover-warning btn-sm mx-3" (click)="parametros(org.id)">
+                            <a title="Configurar párametros" class="btn btn-icon btn-light btn-hover-warning btn-sm mx-3" (click)="parametros(org.parametroOrganizacion)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Settings-2.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-warning">
                   </span>
                             </a>

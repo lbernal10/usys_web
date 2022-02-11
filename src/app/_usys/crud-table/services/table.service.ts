@@ -1,7 +1,7 @@
 // tslint:disable:variable-name
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
-import { catchError, finalize, tap } from 'rxjs/operators';
+import { catchError, finalize, map, tap } from 'rxjs/operators';
 import { PaginatorState } from '../models/paginator.model';
 import { ITableState, TableResponseModel } from '../models/table.model';
 import { ITableState2, TableResponseModel2 } from '../models/table2.model';
@@ -13,6 +13,8 @@ import { Directorio } from '../../core/models/directorio.model';
 import { environment } from '../../../../environments/environment';
 import { AuthModel } from 'src/app/modules/auth/_models/auth.model';
 import { BaseModel2 } from '..';
+import { Organizacion } from '../../core/models/organizacion.model';
+import { baseFilter } from 'src/app/_fake/fake-helpers/http-extenstions';
 
 const DEFAULT_STATE: ITableState = {
   filter: {},
@@ -26,12 +28,13 @@ const DEFAULT_STATE: ITableState = {
 export abstract class TableService<T> {
   // Private fields
   private _items$ = new BehaviorSubject<T[]>([]);
-  private _isLoading$ = new BehaviorSubject<boolean>(false);
+  public _isLoading$ = new BehaviorSubject<boolean>(false);
   private _isFirstLoading$ = new BehaviorSubject<boolean>(true);
   private _tableState$ = new BehaviorSubject<ITableState>(DEFAULT_STATE);
-  private _errorMessage = new BehaviorSubject<string>('');
+  public _errorMessage = new BehaviorSubject<string>('');
   private _subscriptions: Subscription[] = [];
-  private authLocalStorageTokenTablaService = `${environment.appVersion}-${environment.USERDATA_KEY}`;
+  public authLocalStorageTokenTablaService = `${environment.appVersion}-${environment.USERDATA_KEY}`;
+  URL: string;
 
   // Getters
   get items$() {
@@ -78,9 +81,17 @@ export abstract class TableService<T> {
   // CREATE 
   // server should return the object with ID  
   create(item: BaseModel): Observable<BaseModel> {
+    const auth = this.getAuthFromLocalStorageTableService();
+    if (!auth || !auth.access_token) {
+      return of(undefined);
+    }
+    const httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${auth.access_token}`,
+    });
     this._isLoading$.next(true);
     this._errorMessage.next('');
-    return this.http.post<BaseModel>(`${this.API_URL}/${this.MODAL}/crear/${JSON.parse( localStorage.getItem('svariable')).userID}`, item).pipe(
+    const idUsuario = JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idUsuario;
+    return this.http.post<BaseModel>(`${this.API_URL}/${this.MODAL}/crear/${idUsuario}`, item,  {headers: httpHeaders}).pipe(
       tap((res) => {
         this.successMessage();
        }),
@@ -94,9 +105,38 @@ export abstract class TableService<T> {
     );
   }
   createParam(item: BaseModel, paramUrl): Observable<BaseModel> {
+    const auth = this.getAuthFromLocalStorageTableService();
+    if (!auth || !auth.access_token) {
+      return of(undefined);
+    }
+    const httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${auth.access_token}`,
+    });
     this._isLoading$.next(true);
     this._errorMessage.next('');
-    return this.http.post<BaseModel>(`${this.API_URL}/${paramUrl}/${JSON.parse( localStorage.getItem('svariable')).userID}`, item).pipe(
+    const idUsuario = JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idUsuario;
+    return this.http.post<BaseModel>(`${this.API_URL}/${paramUrl}/${idUsuario}`, item ,{headers: httpHeaders}).pipe(
+      catchError(err => {
+        this._errorMessage.next(err);
+        console.error('CREATE ITEM', err);
+        return of({ id: undefined });
+      }),
+      finalize(() => this._isLoading$.next(false))
+    );
+  }
+
+  updateParam(item: BaseModel, paramUrl): Observable<BaseModel> {
+    const auth = this.getAuthFromLocalStorageTableService();
+    if (!auth || !auth.access_token) {
+      return of(undefined);
+    }
+    const httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${auth.access_token}`,
+    });
+    this._isLoading$.next(true);
+    this._errorMessage.next('');
+    const idUsuario = JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idUsuario;
+    return this.http.post<BaseModel>(`${this.API_URL}/${paramUrl}/${idUsuario}`, item ,{headers: httpHeaders}).pipe(
       catchError(err => {
         this._errorMessage.next(err);
         console.error('CREATE ITEM', err);
@@ -140,21 +180,73 @@ export abstract class TableService<T> {
     });
     const url = `${this.API_URL}/${this.MODAL}/${id}`;
     this._errorMessage.next('');
-    return this.http.post<TableResponseModel<T>>(url, tableState, {headers: httpHeaders}).pipe(
-      catchError(err => {
-        this._errorMessage.next(err);
-        console.error('FIND ITEMS', err);
-        return of({ items: [], total: 0 });
+    return this.http.get<T[]>(url, { headers: httpHeaders, }).pipe(
+      map((response: T[]) => {
+        const filteredResult = baseFilter(response, tableState);
+        const result: TableResponseModel<T> = {
+          items: filteredResult.items,
+          total: filteredResult.total
+        };
+        return result;
       })
+      
     );
   }
+
+   // READ (Returning filtered list of entities)
+   findByIdOrg(tableState: ITableState, id: number): Observable<TableResponseModel<T>> {
+    //const url = this.API_URL +  this.MODAL + '/listarIdOrganizacion/'+id;
+    const auth = this.getAuthFromLocalStorageTableService();
+    if (!auth || !auth.access_token) {
+      return of(undefined);
+    }
+    
+    const httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${auth.access_token}`,
+    });
+   // const url = `${this.API_URL}/${this.MODAL}/`;
+
+    const idOrg = JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idOrganizacion;
+    const idTipoU = JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idTipoUsuario;
+    if (idTipoU === 1){
+      this.URL = `${environment.backend}/organizaciones/`;
+    }else if(idTipoU === 2){
+      this.URL = `${environment.backend}/organizaciones/${idOrg}`;
+    }else{
+      this.URL = `${environment.backend}/organizaciones/${idOrg}`;
+      console.log(this.URL)
+    }
+
+    this._errorMessage.next('');
+    return this.http.get<T[]>(this.URL, { headers: httpHeaders, }).pipe(
+      map((response: T[]) => {
+        const filteredResult = baseFilter(response, tableState);
+        const result: TableResponseModel<T> = {
+          items: filteredResult.items,
+          total: filteredResult.total
+        };
+        return result;
+      })
+      
+    );
+  }
+
+ 
 
   getItemById(id: number): Observable<BaseModel> {
     this._isLoading$.next(true);
     this._errorMessage.next('');
+    const auth = this.getAuthFromLocalStorageTableService();
+    if (!auth || !auth.access_token) {
+      return of(undefined);
+    }
+    
+    const httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${auth.access_token}`,
+    });
     const url = `${this.API_URL}/${ this.MODAL}/${id}`;
     console.log(url)
-    return this.http.get<BaseModel>(url).pipe(
+    return this.http.get<BaseModel>(url, { headers: httpHeaders, }).pipe(
       catchError(err => {
         this._errorMessage.next(err);
         console.error('GET ITEM BY IT', id, err);
@@ -165,10 +257,18 @@ export abstract class TableService<T> {
   }
   
   getItemByIdParametroOrganizacion(id: number, paramUrl): Observable<BaseModel> {
+    const auth = this.getAuthFromLocalStorageTableService();
+    if (!auth || !auth.access_token) {
+      return of(undefined);
+    }
+    
+    const httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${auth.access_token}`,
+    });
     this._isLoading$.next(true);
     this._errorMessage.next('');
     const url = `${this.API_URL}/${paramUrl}/${id}`;
-    return this.http.get<BaseModel>(url).pipe(
+    return this.http.get<BaseModel>(url, { headers: httpHeaders, }).pipe(
       catchError(err => {
         this._errorMessage.next(err);
         console.error('GET ITEM BY IT', id, err);
@@ -179,15 +279,23 @@ export abstract class TableService<T> {
   }
   // UPDATE
   update(item: BaseModel, urlparam?: string): Observable<any> {
+    const auth = this.getAuthFromLocalStorageTableService();
+    if (!auth || !auth.access_token) {
+      return of(undefined);
+    }
+    const httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${auth.access_token}`,
+    });
+    const idUsuario = JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idUsuario;
     var url;
     if(urlparam){
-       url = `${this.API_URL}/${urlparam}${item.id}/${JSON.parse( localStorage.getItem('svariable')).userID}`;
+       url = `${this.API_URL}/${urlparam}/${idUsuario}`;
     }else{
-       url = `${this.API_URL}/${ this.MODAL}/editar/${item.id}/${JSON.parse( localStorage.getItem('svariable')).userID}`;
+       url = `${this.API_URL}/${ this.MODAL}/actualizar/${idUsuario}`;
     }
     this._isLoading$.next(true);
     this._errorMessage.next('');
-    return this.http.put(url, item).pipe(
+    return this.http.put(url, item, { headers: httpHeaders, }).pipe(
       tap((res) => {
        this.successMessage();
       }),
@@ -300,7 +408,7 @@ export abstract class TableService<T> {
   obtenerDocumentos(idOrganizacion, filtro, apartirDe, mostrar): Observable<any> {
     this._isLoading$.next(true);
     this._errorMessage.next('');
-    const url = `${environment.backend}/documento/buscar/${idOrganizacion}/${filtro}/${apartirDe}/${mostrar}/`;
+    const url = `${environment.backend}/documentos/buscar/${idOrganizacion}/${filtro}/${apartirDe}/${mostrar}/`;
     return this.http.get<BaseModel>(url).pipe(
       catchError(err => {
         this._errorMessage.next(err);
@@ -314,7 +422,7 @@ export abstract class TableService<T> {
 
 // READ (Returning filtered list of entities)
 findDocumentos(tableState: ITableState, idOrganizacion?:number, filtro?:string, apartirDe?:number, mostrar?:number): Observable<TableResponseModel<T>> {
-  const url = `${environment.backend}/documento/buscar/${idOrganizacion}/${filtro}/${apartirDe}/${mostrar}/`;
+  const url = `${environment.backend}/documentos/buscar/${idOrganizacion}/${filtro}/${apartirDe}/${mostrar}/`;
   this._errorMessage.next('');
   return this.http.post<TableResponseModel<T>>(url, tableState).pipe(
     catchError(err => {
@@ -403,7 +511,7 @@ findDocumentos(tableState: ITableState, idOrganizacion?:number, filtro?:string, 
     this.MODAL = modulo;
     this._isLoading$.next(true);
     this._errorMessage.next('');
-    const request = this.findById(this._tableState$.value,idOrganizacion)
+    const request = this.findByIdOrg(this._tableState$.value,idOrganizacion)
       .pipe(
         tap((res: TableResponseModel<T>) => {
           this._items$.next(res.items);
@@ -683,7 +791,7 @@ findDocumentos(tableState: ITableState, idOrganizacion?:number, filtro?:string, 
       finalize(() => this._isLoading$.next(false))
     );*/
   }
-  private getAuthFromLocalStorageTableService(): AuthModel {
+  public getAuthFromLocalStorageTableService(): AuthModel {
     try {
       const authData = JSON.parse( localStorage.getItem(this.authLocalStorageTokenTablaService) );
       return authData;
@@ -691,6 +799,36 @@ findDocumentos(tableState: ITableState, idOrganizacion?:number, filtro?:string, 
       console.error(error);
       return undefined;
     }
+  }
+
+  // UPDATE
+  updateOrg(item: BaseModel, urlparam?: string): Observable<any> {
+    const auth = this.getAuthFromLocalStorageTableService();
+    if (!auth || !auth.access_token) {
+      return of(undefined);
+    }
+    const httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${auth.access_token}`,
+    });
+    const idUsuario = JSON.parse( localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).idUsuario;
+    var url;
+   
+    url = `${this.API_URL}/${ this.MODAL}/actualizar/${idUsuario}`;
+    
+    this._isLoading$.next(true);
+    this._errorMessage.next('');
+    return this.http.put(url, item,{headers: httpHeaders}).pipe(
+      tap((res) => {
+       this.successMessage();
+      }),
+      catchError(err => {
+        this._errorMessage.next(err);
+        console.error('UPDATE ITEM', item, err);
+       this.failedMessage();
+        return of(item);
+      }),
+      finalize(() => this._isLoading$.next(false))
+    );
   }
 
 }

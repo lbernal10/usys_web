@@ -31,14 +31,14 @@ export const DynamicAsideMenuConfig = {
       page: '/area',
       svg: './assets/media/svg/icons/Home/Flower2.svg'
     },
-    { section: 'Gestión de usuarios' },
+    /*{ section: 'Gestión de usuarios' },
     {
       title: 'Usuarios',
       root: true,
       icon: 'flaticon2-expand',
       page: '/usuario',
       svg: './assets/media/svg/icons/Communication/Shield-user.svg'
-    },
+    },*/
     {
       title: 'Roles',
       root: true,
@@ -46,13 +46,13 @@ export const DynamicAsideMenuConfig = {
       page: '/rol',
       svg: './assets/media/svg/icons/Code/Option.svg'
     },
-    {
+    /*{
       title: 'Permisos',
       root: true,
       icon: 'flaticon2-expand',
       page: '/permiso',
       svg: './assets/media/svg/icons/General/Settings-1.svg'
-    },
+    },*/
     { section: 'Gestión documental' },
     {
       title: 'Documentos',
@@ -61,12 +61,12 @@ export const DynamicAsideMenuConfig = {
       page: '/documento',
       svg: './assets/media/svg/icons/Shopping/Box1.svg'
     },
-    {
+    /*{
       title: 'Metadatos',
       root: true,
       icon: 'flaticon2-expand',
       page: '/metadato',
       svg: './assets/media/svg/icons/Code/Puzzle.svg'
-    },
+    },*/
   ]
 };

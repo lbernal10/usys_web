@@ -17,7 +17,7 @@ export class ParametroOrganizacionService  extends TableService<ParametroOrganiz
 
   // READ
   find(tableState: ITableState): Observable<TableResponseModel<ParametroOrganizacion>> {
-    return this.http.get<ParametroOrganizacion[]>(`${environment.backend}/ParametroOrganizacion/listar`).pipe(
+    return this.http.get<ParametroOrganizacion[]>(`${environment.backend}/ParametrosOrganizacion/listar`).pipe(
       map((response: ParametroOrganizacion[]) => {
         const filteredResult = baseFilter(response, tableState);
         const result: TableResponseModel<ParametroOrganizacion> = {
