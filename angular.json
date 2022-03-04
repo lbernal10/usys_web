@@ -21,7 +21,6 @@
             "showCircularDependencies": false,
             "allowedCommonJsDependencies": [
               "object-path",
-              "apexcharts",
               "clipboard.js",
               "highlight.js",
               "tsparticles"
@@ -40,7 +39,6 @@
               "src/styles.scss"
             ],
             "scripts": [
-              "node_modules/apexcharts/dist/apexcharts.min.js",
               "node_modules/clipboard/dist/clipboard.js"
             ]
           },

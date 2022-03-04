@@ -1,14 +1,12 @@
-<div class="card card-custom" [ngClass]="cssClass">
+<div class="card card-custom" >
   <!-- Body -->
   <div class="card-body p-0">
     <div
       class="d-flex align-items-center justify-content-between card-spacer flex-grow-1"
     >
-      <span [ngClass]="symbolCSSClasses">
+      <span >
         <span class="symbol-label">
           <span
-            [inlineSVG]="'./assets/media/svg/icons/Layout/Layout-4-blocks.svg'"
-            [ngClass]="svgCSSClasses"
           ></span>
         </span>
       </span>
@@ -23,22 +21,7 @@
       class="card-rounded-bottom"
       [style.height]="'150px'"
     >
-      <apx-chart
-        [series]="chartOptions.series"
-        [chart]="chartOptions.chart"
-        [xaxis]="chartOptions.xaxis"
-        [yaxis]="chartOptions.yaxis"
-        [dataLabels]="chartOptions.dataLabels"
-        [stroke]="chartOptions.stroke"
-        [legend]="chartOptions.legend"
-        [fill]="chartOptions.fill"
-        [states]="chartOptions.states"
-        [tooltip]="chartOptions.tooltip"
-        [colors]="chartOptions.colors"
-        [markers]="chartOptions.markers"
-        [plotOptions]="chartOptions.plotOptions"
-      >
-      </apx-chart>
+     
     </div>
     <!--end::Chart-->
     <!--end::Stats-->

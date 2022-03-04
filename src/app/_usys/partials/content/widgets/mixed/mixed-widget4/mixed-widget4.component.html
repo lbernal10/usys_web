@@ -1,4 +1,4 @@
-<div class="card card-custom bg-radial-gradient-danger" [ngClass]="cssClass">
+<div class="card card-custom bg-radial-gradient-danger">
   <!-- Header -->
   <div class="card-header border-0 py-5">
     <h3 class="card-title font-weight-bolder text-white">Sales Progress</h3>
@@ -32,21 +32,7 @@
       [style.height]="'200px'"
       [style.min-height]="'200px'"
     >
-      <apx-chart
-        [series]="chartOptions.series"
-        [chart]="chartOptions.chart"
-        [xaxis]="chartOptions.xaxis"
-        [yaxis]="chartOptions.yaxis"
-        [dataLabels]="chartOptions.dataLabels"
-        [stroke]="chartOptions.stroke"
-        [legend]="chartOptions.legend"
-        [fill]="chartOptions.fill"
-        [states]="chartOptions.states"
-        [tooltip]="chartOptions.tooltip"
-        [colors]="chartOptions.colors"
-        [markers]="chartOptions.markers"
-        [plotOptions]="chartOptions.plotOptions"
-      ></apx-chart>
+     
     </div>
     <!--end::Chart-->
     <!--begin::Stats-->

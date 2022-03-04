@@ -1,4 +1,4 @@
-<div class="card card-custom" [ngClass]="cssClass">
+<div class="card card-custom" >
   <!-- Header -->
   <div class="card-header border-0 pt-5">
     <div class="card-title">
@@ -29,23 +29,7 @@
   <!-- Body -->
   <div class="card-body d-flex flex-column px-0">
     <!--begin::Chart-->
-    <div id="kt_tiles_widget_1_chart" [style.height]="'height: 125px'">
-      <apx-chart
-        [series]="chartOptions.series"
-        [chart]="chartOptions.chart"
-        [xaxis]="chartOptions.xaxis"
-        [yaxis]="chartOptions.yaxis"
-        [dataLabels]="chartOptions.dataLabels"
-        [stroke]="chartOptions.stroke"
-        [legend]="chartOptions.legend"
-        [fill]="chartOptions.fill"
-        [states]="chartOptions.states"
-        [tooltip]="chartOptions.tooltip"
-        [colors]="chartOptions.colors"
-        [markers]="chartOptions.markers"
-        [plotOptions]="chartOptions.plotOptions"
-      ></apx-chart>
-    </div>
+   
     <!--end::Chart-->
     <!--begin::Items-->
     <div class="flex-grow-1 card-spacer-xflex-grow-1 card-spacer-x">
@@ -54,10 +38,7 @@
         <div class="d-flex align-items-center mr-2">
           <div class="symbol symbol-50 symbol-light mr-3 flex-shrink-0">
             <div class="symbol-label">
-              <span
-                [inlineSVG]="'./assets/media/svg/misc/006-plurk.svg'"
-                class="svg-icon h-50"
-              ></span>
+             
             </div>
           </div>
           <div>
@@ -83,10 +64,7 @@
         <div class="d-flex align-items-center mr-2">
           <div class="symbol symbol-50 symbol-light mr-3 flex-shrink-0">
             <div class="symbol-label">
-              <span
-                [inlineSVG]="'./assets/media/svg/misc/015-telegram.svg'"
-                class="svg-icon h-50"
-              ></span>
+            
             </div>
           </div>
           <div>
@@ -112,10 +90,7 @@
         <div class="d-flex align-items-center mr-2">
           <div class="symbol symbol-50 symbol-light mr-3 flex-shrink-0">
             <div class="symbol-label">
-              <span
-                [inlineSVG]="'./assets/media/svg/misc/003-puzzle.svg'"
-                class="svg-icon h-50"
-              ></span>
+              
             </div>
           </div>
           <div>

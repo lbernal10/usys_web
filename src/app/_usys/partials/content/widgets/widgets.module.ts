@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgApexchartsModule } from 'ng-apexcharts';
 import { InlineSVGModule } from 'ng-inline-svg';
 // Advanced Tables
 import { AdvanceTablesWidget1Component } from './advance-tables/advance-tables-widget1/advance-tables-widget1.component';
@@ -97,7 +96,6 @@ import { Widget4DropdownComponent } from './lists/lists-widget4/widget4-dropdown
     CommonModule,
     DropdownMenusModule,
     InlineSVGModule,
-    NgApexchartsModule,
     NgbDropdownModule,
   ],
   exports: [
