@@ -9,7 +9,6 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { LogoutComponent } from './logout/logout.component';
 import { AuthComponent } from './auth.component';
 import {TranslationModule} from '../i18n/translation.module';
-import {NgParticlesModule} from "ng-particles";
 
 @NgModule({
   declarations: [
@@ -25,8 +24,7 @@ import {NgParticlesModule} from "ng-particles";
     AuthRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
-    NgParticlesModule 
+    HttpClientModule
   ]
 })
 export class AuthModule {}
